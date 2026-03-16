@@ -59,6 +59,10 @@ mongoose
     console.error('MongoDB connection error:', err.message);
   });
 
+app.get('/', (req, res) => {
+  res.send('SellSmart POS API is running. Use /api/health for health checks.');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
