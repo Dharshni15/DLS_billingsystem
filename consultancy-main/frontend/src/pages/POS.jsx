@@ -627,7 +627,24 @@ const StripePaymentForm = ({ clientSecret, onSuccess, onCancel, customerName }) 
 
 // Main POS Component with Stripe Provider
 const POSWithStripe = () => {
-  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+  const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+  const [stripePromise, setStripePromise] = useState(null)
+
+  useEffect(() => {
+    if (stripeKey) {
+      setStripePromise(loadStripe(stripeKey))
+    }
+  }, [stripeKey])
+
+  if (!stripeKey) {
+    return (
+      <div className="card p-8 text-center space-y-4">
+        <p className="text-red-400 font-semibold">Stripe Publishable Key Missing</p>
+        <p className="text-white/60 text-sm">Please set VITE_STRIPE_PUBLISHABLE_KEY in your environment variables.</p>
+        <POS />
+      </div>
+    )
+  }
 
   return (
     <Elements stripe={stripePromise}>
