@@ -17,7 +17,8 @@ export default function Signup() {
       await signup(name, email, password)
       nav('/online-orders')
     } catch (e) {
-      alert(e?.response?.data?.error || 'Signup failed')
+      const errMsg = e.response?.data?.error || e.message
+      alert('Signup failed: ' + errMsg)
     } finally {
       setLoading(false)
     }

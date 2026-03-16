@@ -25,16 +25,32 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body || {}
-    const u = await User.findOne({ email })
-    if (!u) return res.status(401).json({ error: 'Invalid credentials' })
-    const ok = await u.comparePassword(password || '')
-    if (!ok) return res.status(401).json({ error: 'Invalid credentials' })
-    const token = signToken(u)
-    res.json({ token, user: { _id: u._id, name: u.name, email: u.email, role: u.role } })
+    console.log(`Login attempt for email: ${email}`);
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const u = await User.findOne({ email });
+    if (!u) {
+      console.log(`User not found: ${email}`);
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const ok = await u.comparePassword(password || '');
+    if (!ok) {
+      console.log(`Invalid password for user: ${email}`);
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = signToken(u);
+    console.log(`Login successful for user: ${email}`);
+    res.json({ token, user: { _id: u._id, name: u.name, email: u.email, role: u.role } });
   } catch (e) {
-    res.status(400).json({ error: e.message })
+    console.error(`Login error: ${e.message}`);
+    res.status(400).json({ error: `Server error: ${e.message}` });
   }
-})
+});
 
 // Me
 router.get('/me', requireAuth, async (req, res) => {

@@ -16,7 +16,8 @@ export default function Login() {
       await login(email, password)
       nav('/online-orders')
     } catch (e) {
-      alert(e?.response?.data?.error || 'Login failed')
+      const errMsg = e.response?.data?.error || e.message
+      alert('Login failed: ' + errMsg)
     } finally {
       setLoading(false)
     }

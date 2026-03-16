@@ -2,7 +2,12 @@ import axios from 'axios'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'https://dls-billingsystem.onrender.com'
 
-export const api = axios.create({ baseURL: `${API_BASE}/api` })
+export const api = axios.create({ 
+  baseURL: `${API_BASE}/api`,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
 
 // Role header management (used by legacy role guards on backend)
 let currentRole = ''

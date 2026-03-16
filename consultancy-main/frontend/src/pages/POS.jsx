@@ -182,7 +182,8 @@ function POS() {
       setClientSecret(secret)
       setShowPaymentForm(true)
     } catch (error) {
-      alert('Failed to initialize payment: ' + error.message)
+      const errMsg = error.response?.data?.error || error.message
+      alert('Failed to initialize payment: ' + errMsg)
     } finally {
       setProcessingPayment(false)
     }

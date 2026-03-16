@@ -30,11 +30,8 @@ const PORT = process.env.PORT || 5001;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sellsmart';
 
-// allow specific origin (production-ready)
-app.use(cors({
-  origin: FRONTEND_ORIGIN,
-  credentials: true
-}));
+// allow all origins for debugging
+app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -42,21 +39,33 @@ app.use(morgan('dev'));
 mongoose
   .connect(MONGODB_URI)
   .then(async () => {
-    console.log('MongoDB connected');
-    // Seed default admin if missing
-    const adminEmail = 'admin';
-    const exists = await User.findOne({ email: adminEmail });
-    if (!exists) {
-      try {
-        await User.create({ name: 'Admin', email: adminEmail, password: 'admin123', role: 'admin' });
+    console.log('MongoDB connection successful');
+    
+    // Check if we need to seed
+    try {
+      const adminEmail = 'admin';
+      const userCount = await User.countDocuments();
+      console.log(`Total users in database: ${userCount}`);
+
+      const exists = await User.findOne({ email: adminEmail });
+      if (!exists) {
+        console.log('Admin user missing, seeding now...');
+        await User.create({ 
+          name: 'Admin', 
+          email: adminEmail, 
+          password: 'admin123', 
+          role: 'admin' 
+        });
         console.log('Seeded default admin: admin / admin123');
-      } catch (e) {
-        console.error('Failed to seed admin:', e.message);
+      } else {
+        console.log('Admin user already exists');
       }
+    } catch (e) {
+      console.error('Seeding error:', e.message);
     }
   })
   .catch((err) => {
-    console.error('MongoDB connection error:', err.message);
+    console.error('CRITICAL: MongoDB connection error:', err.message);
   });
 
 app.get('/', (req, res) => {
@@ -64,7 +73,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    time: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
 });
 
 app.use('/api/products', productsRouter);
