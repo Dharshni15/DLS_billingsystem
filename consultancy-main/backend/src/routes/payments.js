@@ -11,6 +11,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 router.post('/create-payment-intent', async (req, res) => {
   try {
     const { amount, currency = 'inr', metadata } = req.body;
+    console.log(`Creating payment intent: ${amount} ${currency}`);
+
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('MISSING STRIPE_SECRET_KEY in environment variables');
+      return res.status(500).json({ error: 'Stripe configuration error: Secret key missing' });
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert to paisa
@@ -21,13 +27,14 @@ router.post('/create-payment-intent', async (req, res) => {
       },
     });
 
+    console.log(`Payment intent created successfully: ${paymentIntent.id}`);
     res.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
     });
   } catch (error) {
-    console.error('Error creating payment intent:', error);
-    res.status(500).json({ error: error.message });
+    console.error('STRIPE ERROR:', error.message);
+    res.status(500).json({ error: `Stripe error: ${error.message}` });
   }
 });
 
