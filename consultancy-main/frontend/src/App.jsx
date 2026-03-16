@@ -10,7 +10,6 @@ import OnlineOrders from './pages/OnlineOrders'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
-import Discounts from './pages/Discounts'
 import ImportExport from './pages/ImportExport'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAuth } from './contexts/AuthContext'
@@ -69,7 +68,6 @@ function Layout({ children }) {
                 <NavLink to="/dashboard" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Dashboard</NavLink>
                 <NavLink to="/" end className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>POS</NavLink>
                 <NavLink to="/customers" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Customers</NavLink>
-                <NavLink to="/discounts" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Promotions</NavLink>
                 <NavLink to="/import-export" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Import/Export</NavLink>
               </>
             )}
@@ -181,16 +179,6 @@ function AnimatedRoutes() {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
               <RequireAdmin>
                 <CustomerDetail />
-              </RequireAdmin>
-            </motion.div>
-          }
-        />
-        <Route
-          path="/discounts"
-          element={
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-              <RequireAdmin>
-                <Discounts />
               </RequireAdmin>
             </motion.div>
           }

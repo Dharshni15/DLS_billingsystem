@@ -30,12 +30,9 @@ const PORT = process.env.PORT || 5001;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/sellsmart';
 
-// allow any origin (development-friendly)
+// allow specific origin (production-ready)
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    callback(null, true);
-  },
+  origin: FRONTEND_ORIGIN,
   credentials: true
 }));
 app.use(express.json());
