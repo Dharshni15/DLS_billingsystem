@@ -68,7 +68,7 @@ function Layout({ children }) {
                 <NavLink to="/dashboard" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Dashboard</NavLink>
                 <NavLink to="/" end className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>POS</NavLink>
                 <NavLink to="/customers" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Customers</NavLink>
-                <NavLink to="/import-export" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Import/Export</NavLink>
+                <NavLink to="/import-export" className={({isActive})=>`px-3 py-2 rounded hover:bg-white/10 ${isActive? 'bg-white/10 text-white' : ''}`}>Export</NavLink>
               </>
             )}
 
